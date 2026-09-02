@@ -1,0 +1,208 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0f172a;
+    color: #f8fafc;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background-color: #1e293b;
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    border: 1px solid #334155;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header .badge {
+    background-color: #0284c7;
+    color: #ffffff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+header h1 {
+    font-size: 28px;
+    margin-top: 10px;
+    color: #38bdf8;
+}
+
+header p {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+textarea {
+    width: 100%;
+    height: 130px;
+    background-color: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 10px;
+    padding: 15px;
+    color: #f8fafc;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #0284c7;
+}
+
+.btn-analyze {
+    width: 100%;
+    background-color: #0284c7;
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-analyze:hover {
+    background-color: #0369a1;
+}
+
+.btn-analyze:active {
+    transform: scale(0.99);
+}
+
+.results-panel {
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 12px;
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.results-panel.high-risk {
+    background-color: rgba(239, 68, 68, 0.15);
+    border: 2px solid #ef4444;
+}
+
+.results-panel.low-risk {
+    background-color: rgba(34, 197, 94, 0.15);
+    border: 2px solid #22c55e;
+}
+
+.status-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.status-header i {
+    font-size: 28px;
+}
+
+.high-risk .status-header i, .high-risk .status-header h2 {
+    color: #f87171;
+}
+
+.low-risk .status-header i, .low-risk .status-header h2 {
+    color: #4ade80;
+}
+
+.status-desc {
+    font-size: 14px;
+    color: #e2e8f0;
+}
+
+.score-bar-container {
+    background-color: #0f172a;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.score-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.6s ease-in-out, background-color 0.3s;
+}
+
+.details-list {
+    margin-top: 15px;
+    list-style: none;
+}
+
+.details-list li {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.code-preview {
+    margin-top: 35px;
+    background-color: #0f172a;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #334155;
+}
+
+.code-preview h3 {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+pre {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    color: #38bdf8;
+    overflow-x: auto;
+}
