@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafePhish N3 Guard - Detector de Phishing</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Arquivo de Estilos Externo -->
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <span class="badge">Maratona Tech • Nível N3</span>
+            <h1><i class="fa-solid fa-shield-halved"></i> SafePhish N3 Guard</h1>
+            <p>Analisador Inteligente de Artefatos & Mensagens Suspeitas</p>
+        </header>
+
+        <div class="input-group">
+            <label for="messageInput">Cole abaixo o texto do SMS, e-mail ou mensagem do WhatsApp:</label>
+            <textarea id="messageInput" placeholder="Exemplo: URGENTE! Sua conta Pix foi bloqueada por segurança. Acesse http://banco-seguro-login.com para atualizar seus dados imediatamente."></textarea>
+        </div>
+
+        <button class="btn-analyze" onclick="executarAnalise()">
+            <i class="fa-solid fa-magnifying-glass"></i> Analisar Mensagem
+        </button>
+
+        <div id="resultsPanel" class="results-panel">
+            <div class="status-header">
+                <i id="statusIcon" class="fa-solid"></i>
+                <h2 id="statusTitle">Resultado da Análise</h2>
+            </div>
+            
+            <p id="statusDescription" class="status-desc"></p>
+
+            <div class="score-bar-container">
+                <div id="scoreBar" class="score-bar"></div>
+            </div>
+
+            <ul id="detailsList" class="details-list"></ul>
+        </div>
+
+        <div class="code-preview">
+            <h3>
+                <span><i class="fa-solid fa-code"></i> Algoritmo de Detecção (JavaScript)</span>
+                <span>N3 Solution</span>
+            </h3>
+<pre><code>function analisarMensagem(texto) {
+    const termosUrgentes = ["urgente", "bloqueio", "bloqueada", "pix", "senha", "atualize"];
+    let pontuacao = 0;
+
+    termosUrgentes.forEach(termo => {
+        if (texto.toLowerCase().includes(termo)) pontuacao += 20;
+    });
+
+    if (texto.includes("http://") || (!texto.includes("https://") && texto.includes(".com"))) {
+        pontuacao += 40;
+    }
+
+    return { risco: pontuacao > 40 ? "ALTO" : "BAIXO", score: Math.min(pontuacao, 100) };
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- Script de Funcionamento -->
+    <script>
+        function executarAnalise() {
+            const texto = document.getElementById('messageInput').value.trim();
+            const panel = document.getElementById('resultsPanel');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusDescription = document.getElementById('statusDescription');
+            const scoreBar = document.getElementById('scoreBar');
+            const detailsList = document.getElementById('detailsList');
+
+            if (!texto) {
+                alert('Por favor, insira uma mensagem para analisar.');
+                return;
+            }
+
+            const gatilhosUrgencia = ["urgente", "bloqueio", "bloqueada", "cancelada", "imediatamente", "último aviso", "expira"];
+            const gatilhosFinanceiros = ["pix", "senha", "token", "banco", "cartão", "conta", "recadastramento", "transferência"];
+            
+            let pontuacaoRisco = 0;
+            let pontosDetectados = [];
+
+            let encontrouUrgencia = false;
+            gatilhosUrgencia.forEach(palavra => {
+                if (texto.toLowerCase().includes(palavra)) encontrouUrgencia = true;
+            });
+            if (encontrouUrgencia) {
+                pontuacaoRisco += 30;
+                pontosDetectados.push("Gatilho de urgência ou ameaça de bloqueio identificado.");
+            }
+
+            let encontrouFinanceiro = false;
+            gatilhosFinanceiros.forEach(palavra => {
+                if (texto.toLowerCase().includes(palavra)) encontrouFinanceiro = true;
+            });
+            if (encontrouFinanceiro) {
+                pontuacaoRisco += 25;
+                pontosDetectados.push("Solicitação de dados bancários ou referência ao Pix.");
+            }
+
+            if (texto.toLowerCase().includes("http://")) {
+                pontuacaoRisco += 40;
+                pontosDetectados.push("Link sem criptografia segura (HTTP não seguro).");
+            } else if (texto.toLowerCase().includes("http") || texto.toLowerCase().includes(".com") || texto.toLowerCase().includes(".net") || texto.toLowerCase().includes("bit.ly")) {
+                pontuacaoRisco += 25;
+                pontosDetectados.push("Presença de link ou domínio externo para verificação.");
+            }
+
+            const scoreFinal = Math.min(pontuacaoRisco, 100);
+
+            panel.style.display = 'block';
+            detailsList.innerHTML = '';
+
+            if (scoreFinal >= 45) {
+                panel.className = 'results-panel high-risk';
+                statusIcon.className = 'fa-solid fa-triangle-exclamation';
+                statusTitle.innerText = 'Alerta de Phishing / Golpe (Risco Alto)';
+                statusDescription.innerText = 'Esta mensagem apresenta múltiplos padrões típicos de engenharia social. Não clique em links e não forneça senhas!';
+                scoreBar.style.backgroundColor = '#ef4444';
+            } else {
+                panel.className = 'results-panel low-risk';
+                statusIcon.className = 'fa-solid fa-circle-check';
+                statusTitle.innerText = 'Mensagem com Baixo Risco Aparente';
+                statusDescription.innerText = 'Não foram identificados padrões críticos de golpe imediato, mas sempre confirme no app oficial do seu banco.';
+                scoreBar.style.backgroundColor = '#22c55e';
+            }
+
+            scoreBar.style.width = scoreFinal + '%';
+
+            if (pontosDetectados.length === 0) {
+                detailsList.innerHTML = '<li><i class="fa-solid fa-check" style="color: #4ade80;"></i> Nenhum elemento de ameaça conhecido detectado no texto.</li>';
+            } else {
+                pontosDetectados.forEach(ponto => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="color: #f87171;"></i> ${ponto}`;
+                    detailsList.appendChild(li);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
